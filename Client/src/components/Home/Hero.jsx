@@ -1,18 +1,33 @@
 import React, { useState } from "react";
 import Button from "../utils/Button";
 import { Check, LinkIcon, Copy, CheckCircle2 } from "lucide-react";
+import { urlServices } from "../../api";
+import { Link } from "react-router";
 
-const Hero = ({ url, setUrl }) => {
-  const [shortenedUrl, setShortenedUrl] = useState(""); // Stores the result
+const Hero = () => {
+  const [longUrl, setlongUrl] = useState("");
+  const [error, setError] = useState("");
+
+  const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false); // Handles the "Copied!" button state
 
   // Simulate the shortening process
-  const handleTrim = () => {
-    if (!url) return alert("Please paste a link first!");
+  const handleTrim = async () => {
+    try {
+      if (!longUrl) return alert("Please paste a link first!");
+      const res = await urlServices.trimUrl(longUrl);
+      console.log(res);
+      setError("");
+      setShortenedUrl(`http:localhost://8000/${res.shortUrl}`);
+    } catch (error) {
+      console.log("error", error);
+      setError(error);
+      setShortenedUrl("");
+    }
 
     // For now, we mock the result. Later, this will come from your backend.
-    const mockResult = `trimmr.link/${Math.random().toString(36).substring(7)}`;
-    setShortenedUrl(mockResult);
+    // const mockResult = `trimmr.link/${Math.random().toString(36).substring(7)}`;
+    // setShortenedUrl(mockResult);
     setCopied(false); // Reset copy state for the new link
   };
 
@@ -46,7 +61,7 @@ const Hero = ({ url, setUrl }) => {
           Trimmr is the professional way to shorten, manage, and track your
           links. Beautifully simple, incredibly powerful, and completely free.
         </p>
-
+        <p className="h-7 py-1 text-sm text-red-600 font-semibold">{error}</p>
         {/* Main Input Tool */}
         <div className="max-w-3xl mx-auto">
           <div className="p-2 bg-white rounded-2xl shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-2 transition-transform hover:scale-[1.01]">
@@ -54,8 +69,8 @@ const Hero = ({ url, setUrl }) => {
               <LinkIcon className="text-slate-400" size={20} />
               <input
                 type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                value={longUrl}
+                onChange={(e) => setlongUrl(e.target.value)}
                 placeholder="Paste your long link here..."
                 className="w-full py-4 bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
               />
@@ -77,9 +92,14 @@ const Hero = ({ url, setUrl }) => {
                   <div className="bg-white p-2 rounded-lg shadow-sm">
                     <CheckCircle2 className="text-indigo-600" size={20} />
                   </div>
-                  <span className="font-medium text-indigo-900 truncate">
+                  <Link
+                    to={`${shortenedUrl}`}
+                    target="_blank"
+                    className="font-medium text-indigo-900 truncate"
+                    rel="noopener noreferrer"
+                  >
                     {shortenedUrl}
-                  </span>
+                  </Link>
                 </div>
 
                 <Button
