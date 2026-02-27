@@ -25,10 +25,11 @@ apiClient.interceptors.request.use(
 );
 
 const authServices = {
-  registration: async (name, Email, password) => {
+  registration: async (data) => {
+    const { name, email, password } = data;
     const res = await apiClient.post("/auth/register", {
       name,
-      Email,
+      email,
       password,
     });
     return res.data;
