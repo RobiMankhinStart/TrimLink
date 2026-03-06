@@ -1,6 +1,7 @@
 import React from "react";
-import Button from "../utils/Button";
+
 import { Link } from "react-router";
+import Button from "../commonUi/Button";
 
 const MobileNavMenu = ({ isOpen }) => {
   return (

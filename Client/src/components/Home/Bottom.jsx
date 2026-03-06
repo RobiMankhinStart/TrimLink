@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import Button from "../utils/Button";
+import Button from "../commonUi/Button";
 
 const Bottom = () => {
   return (

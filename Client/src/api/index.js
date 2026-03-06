@@ -1,9 +1,10 @@
 import axios from "axios";
+import { getCookie } from "../utils/Services";
 
 // 1. Creating the instance
 const apiClient = axios.create({
   baseURL: "http://localhost:8000/",
-
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,10 +14,13 @@ const apiClient = axios.create({
 // Useful for injecting Auth tokens before the request leaves
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
+    const token = getCookie("acc_tok");
+    console.log("acc_tok  : ", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {
@@ -34,7 +38,9 @@ const authServices = {
     });
     return res.data;
   },
-  login: async (email, password) => {
+  login: async (data) => {
+    const { email, password } = data;
+
     const res = await apiClient.post("/auth/login", { email, password });
     return res.data;
   },

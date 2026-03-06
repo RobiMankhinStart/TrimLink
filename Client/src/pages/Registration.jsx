@@ -1,13 +1,16 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { User, Mail, Lock, Eye, EyeClosed } from "lucide-react";
-import Button from "../components/utils/Button";
-import Input from "../components/utils/Input";
+import Input from "../components/commonUi/Input";
 import { useForm } from "react-hook-form";
-import CheckBox from "../components/utils/CheckBox";
+import CheckBox from "../components/commonUi/CheckBox";
 import { authServices } from "../api";
 import { useState } from "react";
+import { Bounce, toast } from "react-toastify";
+import Button from "../components/commonUi/Button";
 const Registration = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -20,19 +23,37 @@ const Registration = () => {
   const onSubmit = async (data) => {
     console.log(data);
     try {
+      setLoading(true);
       const res = await authServices.registration(data);
       console.log(res);
+
+      toast.success("Registration Successful!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
       // console.log(res.message);
     } catch (error) {
+      setLoading(false);
       const message = error.response?.data?.message;
       console.log("ErrorMessage :", message);
 
       if (message === "User with this email already exists") {
-        setError("email", { message: message });
+        return setError("email", { message: message });
       }
       if (message === "Invalid password") {
-        setError("password", { message: message });
+        return setError("password", { message: message });
       }
+      setError("apiError", { message: message });
     }
   };
   console.log("error", errors);
@@ -111,9 +132,22 @@ const Registration = () => {
                 required: "You must agree to the terms to continue",
               })}
             />
-
-            <Button type="submit" className="w-full py-3">
-              Create Free Account
+            {errors.apiError?.message && (
+              <p className="text-sm font-semibold text-red-600">
+                {errors.apiError.message}
+              </p>
+            )}
+            {/* {success && (
+              <p className="text-lg font-semibold text-yellow-500">
+                Registration Successful
+              </p>
+            )} */}
+            <Button
+              disabled={loading}
+              type="submit"
+              className={`w-full py-3 ${loading ? "bg-gray-400 cursor-not-allowed" : ""}`}
+            >
+              {loading ? "Creating Your Account" : "Create Free Account"}
             </Button>
           </form>
         </div>

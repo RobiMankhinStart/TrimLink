@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import Button from "../utils/Button";
+
 import { Check, LinkIcon, Copy, CheckCircle2 } from "lucide-react";
 import { urlServices } from "../../api";
 import { Link } from "react-router";
+import Button from "../commonUi/Button";
 
 const Hero = () => {
   const [longUrl, setlongUrl] = useState("");

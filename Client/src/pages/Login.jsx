@@ -1,11 +1,61 @@
-import { Link } from "react-router";
-import { Mail, Lock, Github } from "lucide-react";
-import Button from "../components/utils/Button";
+import { Link, useNavigate } from "react-router";
+import { Mail, Lock, Github, Eye, EyeClosed } from "lucide-react";
+import Button from "../components/commonUi/Button";
 import { FiGithub } from "react-icons/fi";
 import { FaGoogle } from "react-icons/fa";
-import Input from "../components/utils/Input";
+import Input from "../components/commonUi/Input";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { authServices } from "../api";
+import { Bounce, toast } from "react-toastify";
 
 const Login = () => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors },
+  } = useForm();
+
+  const handleLogin = async (data) => {
+    console.log(data);
+    try {
+      setLoading(true);
+      const res = await authServices.login(data);
+      console.log(res);
+
+      toast.success("Welcome To TrimLink!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message;
+      console.log("ErrorMessage :", message);
+
+      if (message === "This user doesen't exist. Please Register first") {
+        return setError("email", { message: message });
+      }
+      if (message === "Password do not match") {
+        return setError("password", { message: message });
+      }
+      setError("apiError", { message: message });
+    }
+  };
   return (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
@@ -45,27 +95,52 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-5" onSubmit={handleSubmit(handleLogin)}>
             <Input
               label="Email Address"
               type="email"
               icon={Mail}
               placeholder="name@company.com"
+              {...register("email", { required: "Email Address is required" })}
+              error={errors?.email?.message}
             />
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <label className="text-sm font-medium text-slate-700">
-                  Password
-                </label>
-                <a href="#" className="text-xs font-semibold text-indigo-600">
-                  Forgot?
-                </a>
-              </div>
-              <Input type="password" icon={Lock} placeholder="••••••••" />
+
+            <div className="space-y-1 relative">
+              {open ? (
+                <Eye
+                  onClick={() => setOpen(false)}
+                  className="cursor-pointer duration-300 hover:scale-110 text-gray-600 absolute right-2 top-10 z-10"
+                />
+              ) : (
+                <EyeClosed
+                  onClick={() => setOpen(true)}
+                  className="cursor-pointer duration-300 hover:scale-110 text-gray-600 absolute right-2 top-10 z-10"
+                />
+              )}
+
+              <Input
+                label="Password"
+                labelRight={
+                  <a href="#" className="text-xs text-indigo-600 font-bold">
+                    Forgot?
+                  </a>
+                }
+                type={open ? "text" : "Password"}
+                icon={Lock}
+                placeholder="Min. 8 characters"
+                {...register("password", {
+                  required: "password Address is required",
+                })}
+                error={errors?.password?.message}
+              />
             </div>
 
-            <Button type="submit" className="w-full py-3">
-              Sign In
+            <Button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 ${loading ? "bg-gray-400 cursor-not-allowed" : ""}`}
+            >
+              {loading ? "Signing In" : "  Sign In"}
             </Button>
           </form>
         </div>

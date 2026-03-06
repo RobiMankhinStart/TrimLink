@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router";
 import { Scissors, Menu, X, Github } from "lucide-react";
-import Button from "../utils/Button";
+
 import MobileNavMenu from "./MobileNavMenu";
+import Button from "../commonUi/Button";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
