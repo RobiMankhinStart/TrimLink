@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { Scissors, Menu, X, Github } from "lucide-react";
 
 import MobileNavMenu from "./MobileNavMenu";
 import Button from "../commonUi/Button";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
+  const { user, logout, loading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  // const [logout, setLogout] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +25,8 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Optional: Prevent flicker while checking if user is logged in
+  if (loading) return <div className="h-20 bg-white" />;
   return (
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -47,26 +57,40 @@ const Navbar = () => {
             >
               Home
             </NavLink>
-            <a
-              href="#features"
-              className="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
-            >
-              Features
-            </a>
-
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
 
-            <Link
-              to="/login"
-              className="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors"
-            >
-              Log in
-            </Link>
-            <Link to="/register">
-              <Button size="sm" className="rounded-full shadow-indigo-100 px-6">
-                Get Started
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                {/* Show these if LOGGED IN */}
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-semibold text-slate-700 hover:text-red-600"
+                >
+                  Log Out
+                </button>
+                <Link to="/dashboard" className="font-bold text-indigo-600">
+                  {user.name}
+                </Link>
+              </>
+            ) : (
+              <div>
+                <Link
+                  to="/login"
+                  className="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors"
+                >
+                  Log in
+                </Link>
+
+                <Link to="/registration">
+                  <Button
+                    size="sm"
+                    className="rounded-full shadow-indigo-100 px-6"
+                  >
+                    Get Started
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}

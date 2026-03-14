@@ -22,7 +22,7 @@ const MobileNavMenu = ({ isOpen }) => {
           Login
         </Link>
         <div className="pt-4 px-4">
-          <Link to="/register" className="w-full">
+          <Link to="/registration" className="w-full">
             <Button className="w-full justify-center">Sign Up Free</Button>
           </Link>
         </div>

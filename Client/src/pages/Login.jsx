@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { authServices } from "../api";
 import { Bounce, toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [open, setOpen] = useState(false);
@@ -21,12 +22,16 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+  const { login } = useAuth();
   const handleLogin = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       setLoading(true);
       const res = await authServices.login(data);
       console.log(res);
+      if (res.user) {
+        login(res.user);
+      }
 
       toast.success("Welcome To TrimLink!", {
         position: "top-center",

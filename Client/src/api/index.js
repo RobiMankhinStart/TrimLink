@@ -48,6 +48,10 @@ const authServices = {
     const res = await apiClient.get("/auth/getprofile");
     return res.data;
   },
+  logout: async () => {
+    const res = await apiClient.post("/auth/logout");
+    return res.data;
+  },
 };
 
 const urlServices = {
