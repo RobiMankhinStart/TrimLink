@@ -12,9 +12,10 @@ const Navbar = () => {
   // const [logout, setLogout] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const handleLogout = () => {
-    logout();
-    navigate("/");
+  const handleLogout = async () => {
+    await logout();
+    // 'replace: true' removes the Dashboard from the back-button history
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {

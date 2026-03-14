@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import NotFound from "./components/commonUi/NotFound";
+import GuestRoute from "./components/auth/GuestRoute";
 
 const App = () => {
   return (
@@ -26,8 +27,22 @@ const App = () => {
               }
             />
           </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/registration" element={<Registration />} />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute>
+                <Login />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/registration"
+            element={
+              <GuestRoute>
+                <Registration />
+              </GuestRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
