@@ -9,7 +9,6 @@ import { useAuth } from "../../context/AuthContext";
 const Navbar = () => {
   const { user, logout, loading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  // const [logout, setLogout] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const handleLogout = async () => {

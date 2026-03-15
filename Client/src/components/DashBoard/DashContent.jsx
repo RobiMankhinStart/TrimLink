@@ -216,14 +216,19 @@ import {
   ChevronRight,
   X,
   Calendar,
+  Check,
+  Delete,
+  CheckCircle2,
 } from "lucide-react";
 import { urlServices } from "../../api";
 import { Link } from "react-router";
 import DashFooter from "./Footer";
 import DashHeader from "./DashHeader";
 import VisitModal from "./VisitModal";
+import Button from "../commonUi/Button";
 
 const DashContent = () => {
+  const [copiedId, setCopiedId] = useState(null); // Tracks which ID is currently "copied"
   const [data, setData] = useState([]);
   const [selectedHistory, setSelectedHistory] = useState(null);
   // Helper to format the UTC string into a readable local format
@@ -246,25 +251,127 @@ const DashContent = () => {
       }
     })();
   }, []);
+
+  const handleCopy = (shortUrl, id) => {
+    const fullUrl = `http://localhost:8000/${shortUrl}`;
+    navigator.clipboard.writeText(fullUrl);
+
+    setCopiedId(id);
+    // Reset the icon back to a copy icon after 2 seconds
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  // url delete
+  const deleteUrl = async (id) => {
+    // confirmation with user
+    // if (!window.confirm("Delete this link forever")) return;
+
+    try {
+      const response = await urlServices.deleteUrl(id);
+      console.log("Server Response:", response);
+      setData((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      console.log("error :", error);
+      alert(error);
+    }
+  };
+
+  // ......trimming Link logics
+  const [longUrl, setlongUrl] = useState("");
+  const [error, setError] = useState("");
+
+  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [copied, setCopied] = useState(false); // Handles the "Copied!" button state
+
+  // Simulate the shortening process
+  const handleTrim = async () => {
+    try {
+      if (!longUrl) return alert("Please paste a link first!");
+      const res = await urlServices.trimUrl(longUrl);
+      console.log(res);
+
+      // 1. Update the list state immediately so it's "Real-Time"
+      // We spread the previous data and add the new object at the beginning
+      setData((prevData) => [res, ...prevData]);
+      setError("");
+      setShortenedUrl(`http://localhost:8000/${res.shortUrl}`);
+      setlongUrl("");
+    } catch (error) {
+      console.log("error", error);
+      setError(error);
+      setShortenedUrl("");
+    }
+
+    setCopied(false); // Reset copy state for the new link
+  };
+
+  // Copy to clipboard logic
+  const TrimmedLinkCopy = () => {
+    navigator.clipboard.writeText(shortenedUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Reset button after 2 seconds
+  };
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       {/* 1. Integrated Search & Create Bar */}
-      <div className="relative group mb-12">
+      <div className="relative group mb-5">
         <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
         <div className="relative flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm">
           <div className="flex items-center flex-1 px-4">
             <Search className="text-slate-400 mr-3" size={20} />
             <input
+              value={longUrl}
+              onChange={(e) => setlongUrl(e.target.value)}
               type="text"
               placeholder="Search or paste a long URL to shorten..."
-              className="w-full bg-transparent border-none focus:ring-0 text-slate-700 font-medium placeholder:text-slate-400"
+              className="outline-none w-full bg-transparent border-none focus:ring-0 text-slate-700 font-medium placeholder:text-slate-400"
             />
           </div>
-          <button className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-600 transition-all">
-            Shorten <Zap size={16} fill="currentColor" />
-          </button>
+          <Button
+            onClick={handleTrim}
+            className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-600 transition-all"
+          >
+            TrimLink <Zap fill="currentColor" />
+          </Button>
         </div>
       </div>
+      {/* New Result Component (Conditional Rendering) */}
+      {shortenedUrl && (
+        <div className="my-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="bg-white p-2 rounded-lg shadow-sm">
+                <CheckCircle2 className="text-indigo-600" size={20} />
+              </div>
+              <a
+                to={`${shortenedUrl}`}
+                target="_blank"
+                className="font-medium text-indigo-900 truncate"
+                rel="noopener noreferrer"
+              >
+                {shortenedUrl}
+              </a>
+            </div>
+
+            <Button
+              variant={copied ? "primary" : "secondary"}
+              size="sm"
+              onClick={TrimmedLinkCopy}
+              className="shrink-0"
+            >
+              {copied ? (
+                <>
+                  <Check size={16} /> Copied
+                </>
+              ) : (
+                <>
+                  <Copy size={16} /> Copy
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* 2. Filter & View Header */}
       <DashHeader />
@@ -273,7 +380,7 @@ const DashContent = () => {
       <div className="space-y-3">
         {data?.map((url, i) => (
           <div
-            key={i}
+            key={url._id}
             className="group flex items-center justify-between bg-white border border-slate-100 p-4 rounded-2xl hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all cursor-pointer"
           >
             {/* Left Side: Identity */}
@@ -282,9 +389,14 @@ const DashContent = () => {
                 <Globe size={22} />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                <Link
+                  to={`http://localhost:8000/${url?.shortUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors"
+                >
                   {url?.longUrl}
-                </h3>
+                </Link>
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mt-0.5">
                   <Link
                     to={`http://localhost:8000/${url?.shortUrl}`}
@@ -313,15 +425,40 @@ const DashContent = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <button className="p-2 text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-                  <Copy size={18} />
-                </button>
-                <button
+                <Button
+                  icon={Delete}
+                  className="cursor-pointer"
+                  size="sm"
+                  variant="danger"
+                  onClick={() => deleteUrl(url._id)}
+                >
+                  {/* <Delete /> */}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  // icon={Check}
+                  onClick={() => handleCopy(url.shortUrl, url._id)}
+                  className={`p-2 rounded-lg transition-all ${
+                    copiedId === url._id
+                      ? "text-emerald-600 bg-emerald-50"
+                      : "text-slate-300 hover:text-indigo-600 hover:bg-indigo-50"
+                  }`}
+                >
+                  {copiedId === url._id ? (
+                    <Check size={18} />
+                  ) : (
+                    <Copy size={18} />
+                  )}
+                </Button>
+                <Button
+                  size="sm"
+                  icon={ChevronRight}
                   onClick={() => setSelectedHistory(url)} // Open modal with this URL's data
                   className="cursor-pointer border hover:scale-110 duration-500 ease-in-out p-2 text-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all"
                 >
-                  <ChevronRight size={18} />
-                </button>
+                  {/* <ChevronRight size={18} /> */}
+                </Button>
               </div>
             </div>
           </div>

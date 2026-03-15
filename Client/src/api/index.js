@@ -72,6 +72,17 @@ const urlServices = {
     const res = await apiClient.get("/url/geturls");
     return res.data;
   },
+  deleteUrl: async (id) => {
+    try {
+      // This sends a request to http://localhost:8000/url/delete/ID_HERE
+      const res = await apiClient.delete(`/url/delete/${id}`);
+      return res.data;
+    } catch (error) {
+      const serverMessage =
+        error.response?.data?.message || "Failed to delete URL";
+      throw serverMessage;
+    }
+  },
 };
 export { urlServices, authServices };
 

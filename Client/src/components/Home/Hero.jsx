@@ -19,7 +19,7 @@ const Hero = () => {
       const res = await urlServices.trimUrl(longUrl);
       console.log(res);
       setError("");
-      setShortenedUrl(`http:localhost://8000/${res.shortUrl}`);
+      setShortenedUrl(`http://localhost:8000/${res.shortUrl}`);
     } catch (error) {
       console.log("error", error);
       setError(error);
@@ -93,14 +93,14 @@ const Hero = () => {
                   <div className="bg-white p-2 rounded-lg shadow-sm">
                     <CheckCircle2 className="text-indigo-600" size={20} />
                   </div>
-                  <Link
+                  <a
                     to={`${shortenedUrl}`}
                     target="_blank"
                     className="font-medium text-indigo-900 truncate"
                     rel="noopener noreferrer"
                   >
                     {shortenedUrl}
-                  </Link>
+                  </a>
                 </div>
 
                 <Button
