@@ -226,6 +226,7 @@ import DashFooter from "./Footer";
 import DashHeader from "./DashHeader";
 import VisitModal from "./VisitModal";
 import Button from "../commonUi/Button";
+import Input from "../commonUi/Input";
 
 const DashContent = () => {
   const [copiedId, setCopiedId] = useState(null); // Tracks which ID is currently "copied"
@@ -314,40 +315,39 @@ const DashContent = () => {
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       {/* 1. Integrated Search & Create Bar */}
-      <div className="relative group mb-5">
-        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-        <div className="relative flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm">
-          <div className="flex items-center flex-1 px-4">
-            <Search className="text-slate-400 mr-3" size={20} />
-            <input
-              value={longUrl}
-              onChange={(e) => setlongUrl(e.target.value)}
-              type="text"
-              placeholder="Search or paste a long URL to shorten..."
-              className="outline-none w-full bg-transparent border-none focus:ring-0 text-slate-700 font-medium placeholder:text-slate-400"
-            />
-          </div>
-          <Button
-            onClick={handleTrim}
-            className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-600 transition-all"
-          >
-            TrimLink <Zap fill="currentColor" />
-          </Button>
+      <div className="relative group mb-5 flex flex-col md:flex-row gap-3">
+        <div className="flex-1">
+          <Input
+            icon={Search}
+            value={longUrl}
+            onChange={(e) => setlongUrl(e.target.value)}
+            type="text"
+            placeholder="Search or paste a long URL to shorten..."
+            containerClassName="w-full"
+          />
         </div>
+        <Button
+          onClick={handleTrim}
+          className="md:w-auto w-full flex items-center gap-2"
+          icon={Zap}
+          size="lg"
+        >
+          TrimLink
+        </Button>
       </div>
       {/* New Result Component (Conditional Rendering) */}
       {shortenedUrl && (
         <div className="my-6 animate-in fade-in slide-in-from-top-4 duration-500">
-          <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 overflow-hidden">
+          <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-4 group hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all">
+            <div className="flex items-center gap-3 overflow-hidden flex-1">
               <div className="bg-white p-2 rounded-lg shadow-sm">
                 <CheckCircle2 className="text-indigo-600" size={20} />
               </div>
               <a
-                to={`${shortenedUrl}`}
+                href={shortenedUrl}
                 target="_blank"
-                className="font-medium text-indigo-900 truncate"
                 rel="noopener noreferrer"
+                className="font-medium text-indigo-900 hover:text-indigo-600 truncate cursor-pointer transition-colors"
               >
                 {shortenedUrl}
               </a>

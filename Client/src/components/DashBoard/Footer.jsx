@@ -1,5 +1,6 @@
 import { Zap } from "lucide-react";
 import React from "react";
+import Button from "../commonUi/Button";
 
 const DashFooter = () => {
   return (
@@ -17,9 +18,9 @@ const DashFooter = () => {
             </p>
           </div>
         </div>
-        <button className="text-xs font-black text-indigo-600 hover:underline uppercase tracking-widest">
+        <Button variant="outline" size="sm" className="uppercase">
           Learn More
-        </button>
+        </Button>
       </div>
     </>
   );

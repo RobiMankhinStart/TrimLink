@@ -49,16 +49,16 @@ const Login = () => {
       }, 1000);
     } catch (error) {
       setLoading(false);
-      const message = error.response?.data?.message;
+      const message = error.response?.data?.message || "An error occurred";
       console.log("ErrorMessage :", message);
 
-      if (message === "This user doesen't exist. Please Register first") {
-        return setError("email", { message: message });
+      if (message.includes("email")) {
+        return setError("email", { message });
       }
-      if (message === "Password do not match") {
-        return setError("password", { message: message });
+      if (message.includes("password") || message.includes("Password")) {
+        return setError("password", { message });
       }
-      setError("apiError", { message: message });
+      setError("apiError", { message });
     }
   };
   return (

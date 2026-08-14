@@ -4,6 +4,8 @@ import { Check, LinkIcon, Copy, CheckCircle2 } from "lucide-react";
 import { urlServices } from "../../api";
 import { Link } from "react-router";
 import Button from "../commonUi/Button";
+import Input from "../commonUi/Input";
+import { toast, Zoom } from "react-toastify";
 
 const Hero = () => {
   const [longUrl, setlongUrl] = useState("");
@@ -15,7 +17,18 @@ const Hero = () => {
   // Simulate the shortening process
   const handleTrim = async () => {
     try {
-      if (!longUrl) return alert("Please paste a link first!");
+      if (!longUrl)
+        return toast.warn("Please paste a link first!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          // progress: ,
+          theme: "light",
+          transition: Zoom,
+        });
       const res = await urlServices.trimUrl(longUrl);
       console.log(res);
       setError("");
@@ -26,9 +39,6 @@ const Hero = () => {
       setShortenedUrl("");
     }
 
-    // For now, we mock the result. Later, this will come from your backend.
-    // const mockResult = `trimmr.link/${Math.random().toString(36).substring(7)}`;
-    // setShortenedUrl(mockResult);
     setCopied(false); // Reset copy state for the new link
   };
 
@@ -65,22 +75,18 @@ const Hero = () => {
         <p className="h-7 py-1 text-sm text-red-600 font-semibold">{error}</p>
         {/* Main Input Tool */}
         <div className="max-w-3xl mx-auto">
-          <div className="p-2 bg-white rounded-2xl shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-2 transition-transform hover:scale-[1.01]">
-            <div className="flex-1 flex items-center px-4 gap-3">
-              <LinkIcon className="text-slate-400" size={20} />
-              <input
+          <div className="flex flex-col md:flex-row gap-3 items-end">
+            <div className="flex-1">
+              <Input
+                icon={LinkIcon}
                 type="url"
                 value={longUrl}
                 onChange={(e) => setlongUrl(e.target.value)}
                 placeholder="Paste your long link here..."
-                className="w-full py-4 bg-transparent outline-none text-slate-700 placeholder:text-slate-400"
+                containerClassName="w-full"
               />
             </div>
-            <Button
-              size="lg"
-              className="md:w-auto w-full rounded-xl"
-              onClick={handleTrim} // Trigger the shortening
-            >
+            <Button size="lg" className="md:w-auto w-full" onClick={handleTrim}>
               Trim Link
             </Button>
           </div>
@@ -88,16 +94,16 @@ const Hero = () => {
           {/* New Result Component (Conditional Rendering) */}
           {shortenedUrl && (
             <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 overflow-hidden">
+              <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between gap-4 group hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all">
+                <div className="flex items-center gap-3 overflow-hidden flex-1">
                   <div className="bg-white p-2 rounded-lg shadow-sm">
                     <CheckCircle2 className="text-indigo-600" size={20} />
                   </div>
                   <a
-                    to={`${shortenedUrl}`}
+                    href={shortenedUrl}
                     target="_blank"
-                    className="font-medium text-indigo-900 truncate"
                     rel="noopener noreferrer"
+                    className="font-medium text-indigo-900 hover:text-indigo-600 truncate cursor-pointer transition-colors"
                   >
                     {shortenedUrl}
                   </a>

@@ -1,5 +1,6 @@
 import { Calendar, X } from "lucide-react";
 import React from "react";
+import Button from "../commonUi/Button";
 
 const VisitModal = ({
   selectedHistory,
@@ -21,12 +22,13 @@ const VisitModal = ({
                   {selectedHistory.longUrl}
                 </p>
               </div>
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setSelectedHistory(null)}
-                className="p-2 hover:bg-slate-200 rounded-full transition-colors"
-              >
-                <X size={20} className="text-slate-500" />
-              </button>
+                icon={X}
+                className="p-2"
+              />
             </div>
 
             <div className="max-h-[60vh] overflow-y-auto p-4 space-y-2">
@@ -52,12 +54,12 @@ const VisitModal = ({
             </div>
 
             <div className="p-4 bg-slate-50 text-center">
-              <button
+              <Button
                 onClick={() => setSelectedHistory(null)}
-                className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all"
+                className="w-full"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router";
 import Button from "../commonUi/Button";
 
-const MobileNavMenu = ({ isOpen }) => {
+const MobileNavMenu = ({ isOpen, user, logout }) => {
   return (
     <div
       className={`md:hidden absolute w-full bg-white border-b border-slate-200 transition-all duration-300 ease-in-out ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
@@ -15,17 +15,37 @@ const MobileNavMenu = ({ isOpen }) => {
         >
           Home
         </Link>
-        <Link
-          to="/login"
-          className="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl"
-        >
-          Login
-        </Link>
-        <div className="pt-4 px-4">
-          <Link to="/registration" className="w-full">
-            <Button className="w-full justify-center">Sign Up Free</Button>
-          </Link>
-        </div>
+
+        {user ? (
+          <>
+            <Link
+              to="/dashboard"
+              className="block px-4 py-3 text-base font-medium text-indigo-600 font-bold hover:bg-slate-50 rounded-xl"
+            >
+              {user.name}
+            </Link>
+            <button
+              onClick={logout}
+              className="block w-full text-left px-4 py-3 text-base font-medium text-red-600 hover:bg-slate-50 rounded-xl"
+            >
+              Log Out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl"
+            >
+              Login
+            </Link>
+            <div className="pt-4 px-4">
+              <Link to="/registration" className="w-full">
+                <Button className="w-full justify-center">Sign Up Free</Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

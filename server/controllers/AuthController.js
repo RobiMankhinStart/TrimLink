@@ -17,7 +17,10 @@ const Register = async (req, res) => {
         .status(400)
         .send({ message: "User with this email already exists" });
     if (!isValidPass(password))
-      return res.status(400).send({ message: "Invalid password" });
+      return res.status(400).send({
+        message:
+          "Password must be 8+ characters with uppercase, lowercase, number, and special character (@$!%*?&).",
+      });
     const user = new UserSchema({ name, email, password });
     await user.save();
     return res.status(200).send({ message: "Registration successfull" });
@@ -39,12 +42,11 @@ const login = async (req, res) => {
 
     const existUser = await UserSchema.findOne({ email });
     if (!existUser)
-      return res
-        .status(400)
-        .send({ message: "This user doesen't exist. Please Register first" });
+      return res.status(400).send({
+        message: "User with this email doesen't exist. Please Register first",
+      });
     const passCHeck = await existUser.comparePassword(password);
-    if (!passCHeck)
-      return res.status(400).send({ message: "Password do not match" });
+    if (!passCHeck) return res.status(400).send({ message: "Wrong Password" });
 
     var token = GenerateRanTok({ id: existUser._id, email: existUser.email });
     console.log("token", token);

@@ -44,16 +44,16 @@ const Registration = () => {
       // console.log(res.message);
     } catch (error) {
       setLoading(false);
-      const message = error.response?.data?.message;
+      const message = error.response?.data?.message || "An error occurred";
       console.log("ErrorMessage :", message);
 
-      if (message === "User with this email already exists") {
-        return setError("email", { message: message });
+      if (message.includes("email")) {
+        return setError("email", { message });
       }
-      if (message === "Invalid password") {
-        return setError("password", { message: message });
+      if (message.includes("password") || message.includes("Password")) {
+        return setError("password", { message });
       }
-      setError("apiError", { message: message });
+      setError("apiError", { message });
     }
   };
   console.log("error", errors);

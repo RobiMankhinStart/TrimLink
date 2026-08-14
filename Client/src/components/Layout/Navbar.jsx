@@ -62,12 +62,9 @@ const Navbar = () => {
             {user ? (
               <>
                 {/* Show these if LOGGED IN */}
-                <button
-                  onClick={handleLogout}
-                  className="text-sm font-semibold text-slate-700 hover:text-red-600"
-                >
+                <Button variant="danger" size="sm" onClick={handleLogout}>
                   Log Out
-                </button>
+                </Button>
                 <Link to="/dashboard" className="font-bold text-indigo-600">
                   {user.name}
                 </Link>
@@ -95,18 +92,19 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center">
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+              icon={isOpen ? X : Menu}
+              className="p-2"
+            />
           </div>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
-      <MobileNavMenu isOpen={isOpen} />
+      <MobileNavMenu isOpen={isOpen} user={user} logout={handleLogout} />
     </nav>
   );
 };
