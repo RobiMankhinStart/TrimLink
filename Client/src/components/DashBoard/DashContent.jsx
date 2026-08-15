@@ -313,9 +313,9 @@ const DashContent = () => {
     setTimeout(() => setCopied(false), 2000); // Reset button after 2 seconds
   };
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
       {/* 1. Integrated Search & Create Bar */}
-      <div className="relative group mb-5 flex flex-col md:flex-row gap-3">
+      <div className="relative group mb-5 flex flex-col md:flex-row gap-2 sm:gap-3">
         <div className="flex-1">
           <Input
             icon={Search}
@@ -381,29 +381,31 @@ const DashContent = () => {
         {data?.map((url, i) => (
           <div
             key={url._id}
-            className="group flex items-center justify-between bg-white border border-slate-100 p-4 rounded-2xl hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all cursor-pointer"
+            className="group flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white border border-slate-100 p-3 sm:p-4 rounded-2xl hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all cursor-pointer gap-3 sm:gap-0"
           >
             {/* Left Side: Identity */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-                <Globe size={22} />
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+              <div className="w-10 sm:w-12 h-10 sm:h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform shrink-0">
+                <Globe size={18} className="sm:block" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <Link
                   to={`http://localhost:8000/${url?.shortUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors"
+                  className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1"
+                  title={url?.longUrl}
                 >
                   {url?.longUrl}
                 </Link>
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mt-0.5">
+                <div className="flex items-center gap-1 sm:gap-2 text-xs font-medium text-slate-400 mt-0.5 overflow-hidden">
                   <Link
                     to={`http://localhost:8000/${url?.shortUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="truncate"
                   >
-                    {`http://localhost:8000/${url?.shortUrl}`}
+                    {`${url?.shortUrl}`}
                   </Link>
                   <span className="w-1 h-1 rounded-full bg-slate-300"></span>
                   <span className="flex items-center gap-1 text-emerald-600 font-bold">
@@ -414,17 +416,17 @@ const DashContent = () => {
             </div>
 
             {/* Right Side: Actions & Trend */}
-            <div className="flex items-center gap-6">
-              <div className=" flex flex-col  items-center text-right">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <div className="flex items-center gap-2 sm:gap-6 w-full sm:w-auto justify-between sm:justify-end">
+              <div className="flex flex-col items-center text-right">
+                <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   Visits
                 </p>
-                <p className="   text-base font-bold text-emerald-700 hover:bg-emerald-50 px-2 rounded-md transition-colors">
+                <p className="text-sm sm:text-base font-bold text-emerald-700 hover:bg-emerald-50 px-2 rounded-md transition-colors">
                   {url?.visitHistory?.length || 0}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Button
                   icon={Delete}
                   className="cursor-pointer"

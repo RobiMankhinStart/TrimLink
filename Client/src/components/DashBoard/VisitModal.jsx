@@ -11,14 +11,14 @@ const VisitModal = ({
     <div>
       {" "}
       {selectedHistory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 max-h-[90vh]">
+            <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 gap-3">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900">
                   Visit History
                 </h2>
-                <p className="text-xs text-slate-500 truncate max-w-[250px]">
+                <p className="text-xs text-slate-500 truncate">
                   {selectedHistory.longUrl}
                 </p>
               </div>

@@ -59,10 +59,10 @@ const Registration = () => {
   console.log("error", errors);
   // console.log(watch("password"));
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-6 py-12">
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
       <div className="w-full max-w-md">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-slate-900">
+        <div className="text-center mb-8 sm:mb-10">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
             Create an account
           </h1>
           <p className="text-slate-500 mt-2">
@@ -70,8 +70,11 @@ const Registration = () => {
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100">
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100">
+          <form
+            className="space-y-4 sm:space-y-5"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Input
               label="Full Name"
               icon={User}

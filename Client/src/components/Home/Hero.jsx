@@ -61,14 +61,14 @@ const Hero = () => {
           Now with Advanced Analytics
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
           Shorten your links, <br />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
             expand your reach.
           </span>
         </h1>
 
-        <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-slate-600 mb-10 max-w-2xl mx-auto px-4">
           Trimmr is the professional way to shorten, manage, and track your
           links. Beautifully simple, incredibly powerful, and completely free.
         </p>
@@ -86,7 +86,11 @@ const Hero = () => {
                 containerClassName="w-full"
               />
             </div>
-            <Button size="lg" className="md:w-auto w-full" onClick={handleTrim}>
+            <Button
+              size="lg"
+              className="cursor-pointer md:w-auto w-full"
+              onClick={handleTrim}
+            >
               Trim Link
             </Button>
           </div>
@@ -129,15 +133,15 @@ const Hero = () => {
             </div>
           )}
 
-          <p className="mt-6 text-sm text-slate-400 flex items-center justify-center gap-4">
+          <p className="mt-6 text-xs sm:text-sm text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <span className="flex items-center gap-1">
-              <Check size={14} className="text-green-500" /> No credit card
+              <Check size={12} className="text-green-500" /> No credit card
             </span>
             <span className="flex items-center gap-1">
-              <Check size={14} className="text-green-500" /> Instant redirect
+              <Check size={12} className="text-green-500" /> Instant redirect
             </span>
             <span className="flex items-center gap-1">
-              <Check size={14} className="text-green-500" /> QR codes
+              <Check size={12} className="text-green-500" /> QR codes
             </span>
           </p>
         </div>

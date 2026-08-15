@@ -5,17 +5,17 @@ import { BarChart3, ShieldCheck, Zap } from "lucide-react";
 const Features = () => {
   return (
     <section className="py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-slate-900">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
             Everything you need in one place
           </h2>
-          <p className="text-slate-500 mt-2">
+          <p className="text-sm sm:text-base text-slate-500 mt-2">
             Built for creators, marketers, and developers.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           <FeatureCard
             icon={<Zap className="text-amber-500" />}
             title="Lightning Fast"
