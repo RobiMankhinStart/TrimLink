@@ -50,7 +50,12 @@ const login = async (req, res) => {
 
     var token = GenerateRanTok({ id: existUser._id, email: existUser.email });
     console.log("token", token);
-    res.cookie("acc_tok", token);
+    res.cookie("acc_tok", token, {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
     return res.status(200).send({
       message: "Login Successfull",
       acc_token: token,
@@ -69,7 +74,12 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     // This tells the browser to delete the cookie named "acc_tok"
-    res.clearCookie("acc_tok");
+    res.clearCookie("acc_tok", {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
 
     return res.status(200).send({ message: "Logged out successfully" });
   } catch (error) {

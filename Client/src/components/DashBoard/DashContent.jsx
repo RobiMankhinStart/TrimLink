@@ -220,7 +220,7 @@ import {
   Delete,
   CheckCircle2,
 } from "lucide-react";
-import { urlServices } from "../../api";
+import { urlServices, buildShortLink } from "../../api";
 import { Link } from "react-router";
 import DashFooter from "./Footer";
 import DashHeader from "./DashHeader";
@@ -254,7 +254,7 @@ const DashContent = () => {
   }, []);
 
   const handleCopy = (shortUrl, id) => {
-    const fullUrl = `http://localhost:8000/${shortUrl}`;
+    const fullUrl = buildShortLink(shortUrl);
     navigator.clipboard.writeText(fullUrl);
 
     setCopiedId(id);
@@ -295,7 +295,7 @@ const DashContent = () => {
       // We spread the previous data and add the new object at the beginning
       setData((prevData) => [res, ...prevData]);
       setError("");
-      setShortenedUrl(`http://localhost:8000/${res.shortUrl}`);
+      setShortenedUrl(buildShortLink(res.shortUrl));
       setlongUrl("");
     } catch (error) {
       console.log("error", error);
@@ -390,7 +390,7 @@ const DashContent = () => {
               </div>
               <div className="min-w-0 flex-1">
                 <Link
-                  to={`http://localhost:8000/${url?.shortUrl}`}
+                  to={buildShortLink(url?.shortUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1"
@@ -400,7 +400,7 @@ const DashContent = () => {
                 </Link>
                 <div className="flex items-center gap-1 sm:gap-2 text-xs font-medium text-slate-400 mt-0.5 overflow-hidden">
                   <Link
-                    to={`http://localhost:8000/${url?.shortUrl}`}
+                    to={buildShortLink(url?.shortUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="truncate"

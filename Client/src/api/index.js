@@ -1,9 +1,38 @@
 import axios from "axios";
 import { getCookie } from "../utils/Services";
 
+const getDefaultApiBaseUrl = () => {
+  if (typeof window === "undefined") return "http://localhost:8000";
+
+  return window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+    ? "http://localhost:8000"
+    : window.location.origin;
+};
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || getDefaultApiBaseUrl();
+const AUTH_TOKEN_KEY = "trimlink_token";
+
+const buildShortLink = (shortUrl) => {
+  const baseUrl =
+    import.meta.env.VITE_PUBLIC_URL ||
+    import.meta.env.VITE_BACKEND_URL ||
+    getDefaultApiBaseUrl();
+
+  return `${baseUrl.replace(/\/$/, "")}/${String(shortUrl).replace(/^\/+/, "")}`;
+};
+
+const getStoredToken = () => {
+  try {
+    return localStorage.getItem(AUTH_TOKEN_KEY) || getCookie("acc_tok") || "";
+  } catch {
+    return getCookie("acc_tok") || "";
+  }
+};
+
 // 1. Creating the instance
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8000",
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -14,8 +43,7 @@ const apiClient = axios.create({
 // Useful for injecting Auth tokens before the request leaves
 apiClient.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem("token");
-    const token = getCookie("acc_tok");
+    const token = getStoredToken();
     console.log("acc_tok  : ", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -42,6 +70,11 @@ const authServices = {
     const { email, password } = data;
 
     const res = await apiClient.post("/auth/login", { email, password });
+
+    if (res.data?.acc_token) {
+      localStorage.setItem(AUTH_TOKEN_KEY, res.data.acc_token);
+    }
+
     return res.data;
   },
   getProfile: async () => {
@@ -50,6 +83,7 @@ const authServices = {
   },
   logout: async () => {
     const res = await apiClient.post("/auth/logout");
+    localStorage.removeItem(AUTH_TOKEN_KEY);
     return res.data;
   },
 };
@@ -84,7 +118,7 @@ const urlServices = {
     }
   },
 };
-export { urlServices, authServices };
+export { urlServices, authServices, buildShortLink };
 
 // export default apiClient;
 

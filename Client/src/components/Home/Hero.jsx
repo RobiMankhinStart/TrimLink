@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Check, LinkIcon, Copy, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { urlServices } from "../../api";
+import { urlServices, buildShortLink } from "../../api";
 import Button from "../commonUi/Button";
 import Input from "../commonUi/Input";
 import { useAuth } from "../../context/AuthContext";
@@ -35,11 +35,12 @@ const Hero = () => {
       const res = await urlServices.trimUrl(longUrl);
       console.log(res);
       setError("");
-      setShortenedUrl(`http://localhost:8000/${res.shortUrl}`);
+      setShortenedUrl(buildShortLink(res.shortUrl));
       toast.success("Your short link is ready!");
     } catch (error) {
       console.log("error", error);
-      const message = error?.response?.data?.message || error || "Something went wrong";
+      const message =
+        error?.response?.data?.message || error || "Something went wrong";
       setError(message);
       setShortenedUrl("");
       toast.error(message);
@@ -70,7 +71,7 @@ const Hero = () => {
 
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
           Shorten your links, <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
+          <span className="bg-clip-text text-transparent bg-linear-to-r from-indigo-600 to-violet-600">
             expand your reach.
           </span>
         </h1>
@@ -81,9 +82,9 @@ const Hero = () => {
         </p>
         <p className="h-7 py-1 text-sm text-red-600 font-semibold">{error}</p>
         {/* Main Input Tool */}
-        <div className="max-w-3xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-3 items-end">
-            <div className="flex-1">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-end">
+            <div className="min-w-0 flex-1 w-full">
               <Input
                 icon={LinkIcon}
                 type="url"
@@ -91,11 +92,12 @@ const Hero = () => {
                 onChange={(e) => setlongUrl(e.target.value)}
                 placeholder="Paste your long link here..."
                 containerClassName="w-full"
+                className="min-w-0"
               />
             </div>
             <Button
               size="lg"
-              className="cursor-pointer md:w-auto w-full"
+              className="w-full cursor-pointer md:w-auto"
               onClick={handleTrim}
             >
               Trim Link

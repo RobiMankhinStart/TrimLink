@@ -1,9 +1,58 @@
 @import "tailwindcss";
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
 }
+
 @theme {
-  --color-primary: #6366f1; /* Indigo */
-  --color-secondary: #0f172a; /* Slate 900; */
+  --color-primary: #6366f1;
+  --color-secondary: #0f172a;
+}
+
+:root {
+  font-family: Inter, "Segoe UI", sans-serif;
+  color: #0f172a;
+  background: #f8fafc;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+a {
+  transition: all 180ms ease;
+}
+
+#root {
+  min-height: 100vh;
 }

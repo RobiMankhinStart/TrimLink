@@ -29,6 +29,13 @@ export const AuthProvider = ({ children }) => {
   // }, []);
   const checkAuth = useCallback(async () => {
     try {
+      const token = localStorage.getItem("trimlink_token");
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       const userData = await authServices.getProfile();
       setUser(userData);
     } catch (error) {
@@ -66,6 +73,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.log(error?.response?.data?.message);
+      setUser(null);
     }
   };
 
