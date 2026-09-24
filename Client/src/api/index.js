@@ -3,7 +3,8 @@ import { getCookie } from "../utils/Services";
 
 // 1. Creating the instance
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/",
+  // eslint-disable-next-line no-undef
+  baseURL: process.env.VITE_BACKEND_URL || "http://localhost:8000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
