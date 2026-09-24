@@ -70,10 +70,10 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <div>
+              <div className="flex items-center  gap-3">
                 <Link
                   to="/login"
-                  className="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors"
+                  className="border p-1 px-2 rounded-lg border-gray-400 text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors"
                 >
                   Log in
                 </Link>
