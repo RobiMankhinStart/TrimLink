@@ -6,8 +6,8 @@ import { FaGoogle } from "react-icons/fa";
 import Input from "../components/commonUi/Input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { toast } from "sonner";
 import { authServices } from "../api";
-import { Bounce, toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -33,17 +33,7 @@ const Login = () => {
         login(res.user);
       }
 
-      toast.success("Welcome To TrimLink!", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.success("Welcome to TrimLink!");
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);

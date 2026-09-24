@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { Scissors, Menu, X, Github } from "lucide-react";
+import { toast } from "sonner";
 
 import MobileNavMenu from "./MobileNavMenu";
 import Button from "../commonUi/Button";
@@ -13,8 +14,10 @@ const Navbar = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     await logout();
-    // 'replace: true' removes the Dashboard from the back-button history
-    navigate("/", { replace: true });
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 1500);
   };
 
   useEffect(() => {

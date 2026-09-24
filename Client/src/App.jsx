@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "sonner";
 import Registration from "./pages/Registration";
 import Layout from "./components/Layout/Index";
 import Home from "./pages/Home";
@@ -46,7 +46,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
+      <Toaster position="top-right" richColors closeButton />
     </AuthProvider>
   );
 };

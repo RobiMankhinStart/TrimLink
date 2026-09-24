@@ -1,42 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Check, LinkIcon, Copy, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
 import { urlServices } from "../../api";
-import { Link } from "react-router";
 import Button from "../commonUi/Button";
 import Input from "../commonUi/Input";
-import { toast, Zoom } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 
 const Hero = () => {
+  const { user } = useAuth();
   const [longUrl, setlongUrl] = useState("");
   const [error, setError] = useState("");
 
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false); // Handles the "Copied!" button state
 
+  useEffect(() => {
+    if (!user) {
+      setlongUrl("");
+      setError("");
+      setShortenedUrl("");
+      setCopied(false);
+    }
+  }, [user]);
+
   // Simulate the shortening process
   const handleTrim = async () => {
     try {
-      if (!longUrl)
-        return toast.warn("Please paste a link first!", {
-          position: "top-center",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          // progress: ,
-          theme: "light",
-          transition: Zoom,
-        });
+      if (!longUrl) {
+        toast.warning("Please paste a link first!");
+        return;
+      }
+
       const res = await urlServices.trimUrl(longUrl);
       console.log(res);
       setError("");
       setShortenedUrl(`http://localhost:8000/${res.shortUrl}`);
+      toast.success("Your short link is ready!");
     } catch (error) {
       console.log("error", error);
-      setError(error);
+      const message = error?.response?.data?.message || error || "Something went wrong";
+      setError(message);
       setShortenedUrl("");
+      toast.error(message);
     }
 
     setCopied(false); // Reset copy state for the new link
@@ -47,6 +53,7 @@ const Hero = () => {
     navigator.clipboard.writeText(shortenedUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000); // Reset button after 2 seconds
+    toast.success("Link copied to clipboard");
   };
 
   return (

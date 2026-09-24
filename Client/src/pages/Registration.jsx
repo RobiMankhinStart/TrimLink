@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import CheckBox from "../components/commonUi/CheckBox";
 import { authServices } from "../api";
 import { useState } from "react";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "sonner";
 import Button from "../components/commonUi/Button";
 const Registration = () => {
   const [open, setOpen] = useState(false);
@@ -27,17 +27,7 @@ const Registration = () => {
       const res = await authServices.registration(data);
       console.log(res);
 
-      toast.success("Registration Successful!", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      toast.success("Registration successful!");
       setTimeout(() => {
         navigate("/login");
       }, 1000);
